@@ -13,6 +13,7 @@ def maybe_download(day):
     file_name = os.path.join(day_dir, 'in.txt')
     if not os.path.exists(file_name):
         url = 'http://adventofcode.com/2016/day/%d/input' % day
+        print('Downloading %s ...' % url)
         cookies = browser_cookie3.firefox(domain_name='adventofcode.com')
         response = requests.get(url, cookies=cookies)
         with open(file_name, 'wb') as file:
