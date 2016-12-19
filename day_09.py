@@ -2,7 +2,7 @@ from util import maybe_download
 import re
 
 
-def decompress_size(s):
+def decompress_size(s: str, recursive: bool = False):
     text_size = 0
     op_regex = re.compile(r'\((\d+)x(\d+)\)')
 
@@ -15,10 +15,14 @@ def decompress_size(s):
 
         n_ch, n = [int(x) for x in m.groups()]
 
-        text_size += n_ch * n
-
         start_ch = m.end()
         end_ch = start_ch + n_ch
+
+        if recursive:
+            chars = s[start_ch: end_ch]
+            text_size += decompress_size(chars, recursive) * n
+        else:
+            text_size += n_ch * n
 
         s = s[end_ch:]
 
@@ -33,5 +37,11 @@ def part1():
             s = s.strip()
             print('part1:', decompress_size(s))
 
+def part2():
+    with maybe_download(9) as file:
+        for s in file:
+            s = s.strip()
+            print('part2:', decompress_size(s, True))
 
 part1()
+part2()
